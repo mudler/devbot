@@ -30,7 +30,11 @@ func (m *LoggerPlugin) OnPart(event *irc.Event) {
 	go ChannelLogger(plugin_registry.Config.LogDir+"/"+event.Arguments[0], event.Nick, message)
 }
 func (m *LoggerPlugin) OnPrivmsg(event *irc.Event) {
-	go ChannelLogger(plugin_registry.Config.LogDir+"/"+event.Arguments[0], event.Nick+": ", event.Message())
+	destination := event.Arguments[0]
+	if event.Arguments[0] == plugin_registry.Config.BotNick {
+		destination = event.Nick
+	}
+	go ChannelLogger(plugin_registry.Config.LogDir+"/"+destination, event.Nick+": ", event.Message())
 }
 
 func (m *LoggerPlugin) OnJoin(event *irc.Event) {
@@ -53,7 +57,10 @@ func ChannelLogger(Log string, UserNick string, message string) {
 	f, err := os.OpenFile(logFile, os.O_RDWR|os.O_APPEND|os.O_SYNC, 0666)
 	if err != nil {
 		fmt.Println(err)
+		LogFile(logFile)
+		f, err = os.OpenFile(logFile, os.O_RDWR|os.O_APPEND|os.O_SYNC, 0666)
 	}
+
 	defer f.Close()
 	n, err := io.WriteString(f, fmt.Sprintf("%v > %v: %v\n", STime, UserNick, message))
 	if err != nil {

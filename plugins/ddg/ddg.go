@@ -30,6 +30,11 @@ func (m *DDGPlugin) OnPrivmsg(event *irc.Event) {
 		cmdArray []string
 	)
 	msg = event.Message()
+	destination := event.Arguments[0]
+	if event.Arguments[0] == config.BotNick {
+		destination = event.Nick
+	}
+
 
 	cmdArray = strings.SplitAfterN(msg, config.CommandPrefix, 2)
 	if !strings.Contains(msg, "ddg") && !strings.Contains(msg, "search") {
@@ -41,7 +46,7 @@ func (m *DDGPlugin) OnPrivmsg(event *irc.Event) {
 
 	if len(msgArray) > 1 {
 		query := strings.Join(msgArray[1:], " ")
-		conn.Privmsg(event.Arguments[0], SearchCmd(query))
+		conn.Privmsg(destination, SearchCmd(query))
 	}
 
 }

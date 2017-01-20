@@ -22,21 +22,25 @@ func (m *HelperPlugin) OnPrivmsg(event *irc.Event) {
 	conn := plugin_registry.Conn
 	config := plugin_registry.Config
 	message := event.Message()
+  destination := event.Arguments[0]
+  if event.Arguments[0] == config.BotNick {
+    destination = event.Nick
+  }
 
 	switch {
 	case strings.Contains(message, "help"):
-		conn.Privmsg(event.Arguments[0], "\t"+config.CommandPrefix+"wiki - Display wiki url")
-		conn.Privmsg(event.Arguments[0], "\t"+config.CommandPrefix+"homepage - Display homepage url")
-		conn.Privmsg(event.Arguments[0], "\t"+config.CommandPrefix+"forum - Display forum url")
-		conn.Privmsg(event.Arguments[0], "\t"+config.CommandPrefix+"bugs - Display bugzilla url")
+		conn.Privmsg(destination, "\t"+config.CommandPrefix+"wiki - Display wiki url")
+		conn.Privmsg(destination, "\t"+config.CommandPrefix+"homepage - Display homepage url")
+		conn.Privmsg(destination, "\t"+config.CommandPrefix+"forum - Display forum url")
+		conn.Privmsg(destination, "\t"+config.CommandPrefix+"bugs - Display bugzilla url")
 	case strings.Contains(message, "wiki"):
-		conn.Privmsg(event.Arguments[0], config.WikiLink)
+		conn.Privmsg(destination, config.WikiLink)
 	case strings.Contains(message, "homepage"):
-		conn.Privmsg(event.Arguments[0], config.Homepage)
+		conn.Privmsg(destination, config.Homepage)
 	case strings.Contains(message, "forum"):
-		conn.Privmsg(event.Arguments[0], config.Forums)
+		conn.Privmsg(destination, config.Forums)
 	case strings.Contains(message, "bugs"):
-		conn.Privmsg(event.Arguments[0], config.Bugs)
+		conn.Privmsg(destination, config.Bugs)
 
 	}
 

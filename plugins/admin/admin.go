@@ -23,61 +23,75 @@ func (m *AdminPlugin) OnPrivmsg(event *irc.Event) {
 	conn := plugin_registry.Conn
 	config := plugin_registry.Config
 	message := event.Message()
+	destination := event.Arguments[0]
+	if event.Arguments[0] == config.BotNick {
+		destination = event.Nick
+	}
 	if config.IsAdmin(event.Nick) == false {
 		return
 	}
 
 	if message == config.CommandPrefix+"help" {
-		conn.Privmsg(event.Arguments[0], "- Admin commands - ")
-		conn.Privmsg(event.Arguments[0], "\t"+config.CommandPrefix+"enable <plugin> - Load a specific plugin again in memory")
-		conn.Privmsg(event.Arguments[0], "\t"+config.CommandPrefix+"disable <plugin> - UnLoad a specific plugin in memory")
-		conn.Privmsg(event.Arguments[0], "\t"+config.CommandPrefix+"listplugins - List all plugins")
-		conn.Privmsg(event.Arguments[0], "\t"+config.CommandPrefix+"op <nick> - Op nick on channel")
-		conn.Privmsg(event.Arguments[0], "\t"+config.CommandPrefix+"deop <nick> - Deop nick on channel")
-		conn.Privmsg(event.Arguments[0], "\t"+config.CommandPrefix+"kick <nick> - kick nick on channel")
+		conn.Privmsg(destination, "- Admin commands - ")
+		conn.Privmsg(destination, "\t"+config.CommandPrefix+"enable <plugin> - Load a specific plugin again in memory")
+		conn.Privmsg(destination, "\t"+config.CommandPrefix+"disable <plugin> - UnLoad a specific plugin in memory")
+		conn.Privmsg(destination, "\t"+config.CommandPrefix+"listplugins - List all plugins")
+		conn.Privmsg(destination, "\t"+config.CommandPrefix+"op <nick> - Op nick on channel")
+		conn.Privmsg(destination, "\t"+config.CommandPrefix+"deop <nick> - Deop nick on channel")
+		conn.Privmsg(destination, "\t"+config.CommandPrefix+"kick <nick> - kick nick on channel")
+		conn.Privmsg(destination, "\t"+config.CommandPrefix+"join <channel> - join channel")
+
 	}
 
 	if message == config.CommandPrefix+"listplugins" {
-		ListPlugins(event.Arguments[0], conn)
+		ListPlugins(destination, conn)
 	}
 	if strings.Contains(message, config.CommandPrefix+"enable") {
 		args := util.StripPluginCommand(message, config.CommandPrefix, "enable")
 		if plugin_registry.EnablePlugin(args) {
-			conn.Privmsg(event.Arguments[0], args+" Enabled")
+			conn.Privmsg(destination, args+" Enabled")
 		}
-		ListPlugins(event.Arguments[0], conn)
+		ListPlugins(destination, conn)
 	}
 	if strings.Contains(message, config.CommandPrefix+"disable") {
 		args := util.StripPluginCommand(message, config.CommandPrefix, "disable")
 		if plugin_registry.DisablePlugin(args) {
-			conn.Privmsg(event.Arguments[0], args+" Disabled")
+			conn.Privmsg(destination, args+" Disabled")
 
 		}
-		ListPlugins(event.Arguments[0], conn)
+		ListPlugins(destination, conn)
 	}
 
 	if strings.Contains(message, config.CommandPrefix+"op") {
-		cmd := strings.Split(message, " ")
-		if cmd[1] != "" {
-			log.Println("[AdminPlugin] MODE +o " + event.Arguments[0] + " " + cmd[1])
-			conn.SendRaw("MODE +o " + event.Arguments[0] + " " + cmd[1])
+		args:=util.StripPluginCommand(message,config.CommandPrefix,"join")
+		if args != "" {
+			conn.SendRaw("MODE +o " + destination + " " + args)
+		}
+	}
+	if strings.Contains(message, config.CommandPrefix+"join") {
+		args:=util.StripPluginCommand(message,config.CommandPrefix,"join")
+		if args != "" {
+			conn.Join(args)
+		}
+	}
+	if strings.Contains(message, config.CommandPrefix+"part") {
+		args:=util.StripPluginCommand(message,config.CommandPrefix,"part")
+		if args != "" {
+			conn.SendRaw("PART "+args)
 		}
 	}
 
 	if strings.Contains(message, config.CommandPrefix+"deop") {
-		cmd := strings.Split(message, " ")
-		if cmd[1] != "" {
-			log.Println("[AdminPlugin] MODE -o " + event.Arguments[0] + " " + cmd[1])
-
-			conn.SendRaw("MODE -o " + event.Arguments[0] + " " + cmd[1])
+		args:=util.StripPluginCommand(message,config.CommandPrefix,"part")
+		if args != "" {
+			conn.SendRaw("MODE -o " + destination + " " + args)
 		}
 	}
 
 	if strings.Contains(message, config.CommandPrefix+"kick") {
-		cmd := strings.Split(message, " ")
-		if cmd[1] != "" {
-			log.Println("[AdminPlugin] KICK " + event.Arguments[0] + " " + cmd[1] + " : RESOLVED->KICKED")
-			conn.SendRaw("KICK " + event.Arguments[0] + " " + cmd[1] + " : RESOLVED->KICKED")
+		args:=util.StripPluginCommand(message,config.CommandPrefix,"part")
+		if args != "" {
+			conn.SendRaw("KICK " + destination + " " + args + " :RESOLVED->KICKED")
 		}
 	}
 
