@@ -25,9 +25,9 @@ func (m *UrlPreviewPlugin) OnPrivmsg(event *irc.Event) {
 	conn := plugin_registry.Conn
 	message := event.Message()
 	destination := event.Arguments[0]
-  if event.Arguments[0] == plugin_registry.Config.BotNick {
-    destination = event.Nick
-  }
+	if event.Arguments[0] == plugin_registry.Config.BotNick {
+		destination = event.Nick
+	}
 
 	if strings.Contains(message, "http://") || strings.Contains(message, "https://") || strings.Contains(message, "www.") {
 		conn.Privmsg(destination, UrlTitle(message))

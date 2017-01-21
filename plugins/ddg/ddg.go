@@ -35,7 +35,6 @@ func (m *DDGPlugin) OnPrivmsg(event *irc.Event) {
 		destination = event.Nick
 	}
 
-
 	cmdArray = strings.SplitAfterN(msg, config.CommandPrefix, 2)
 	if !strings.Contains(msg, "ddg") && !strings.Contains(msg, "search") {
 		return

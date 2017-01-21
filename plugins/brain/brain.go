@@ -31,23 +31,23 @@ func (m *BrainPlugin) OnPrivmsg(event *irc.Event) {
 	conn := plugin_registry.Conn
 	config := plugin_registry.Config
 	message := event.Message()
-  destination := event.Arguments[0]
-  if event.Arguments[0] == config.BotNick {
-    destination = event.Nick
-  }
-  // message starts with command prefix, ignoring.
-  if string(message[0]) == config.CommandPrefix {
-    log.Println("[BrainPlugin] Do not learn !: "+message)
-    return
-  }
+	destination := event.Arguments[0]
+	if event.Arguments[0] == config.BotNick {
+		destination = event.Nick
+	}
+	// message starts with command prefix, ignoring.
+	if string(message[0]) == config.CommandPrefix {
+		log.Println("[BrainPlugin] Do not learn !: " + message)
+		return
+	}
 
 	re, _ := regexp.Compile(config.BotNick + "[:]?")
 	sanitizedInput := re.ReplaceAllLiteralString(message, "")
-  log.Println("[BrainPlugin] Learn: "+sanitizedInput)
+	log.Println("[BrainPlugin] Learn: " + sanitizedInput)
 	m.Brain.Learn(sanitizedInput)
 	if !strings.HasPrefix(message, config.CommandPrefix) {
 		if sanitizedInput != message || event.Arguments[0] == config.BotNick {
-      log.Println("[BrainPlugin] Answer!")
+			log.Println("[BrainPlugin] Answer!")
 			conn.Privmsg(destination, m.Brain.Reply(sanitizedInput))
 		}
 	}

@@ -6,8 +6,7 @@ import (
 	"github.com/thoj/go-ircevent"
 	"net/http"
 
-	 "github.com/inconshreveable/go-update"
-
+	"github.com/inconshreveable/go-update"
 
 	"log"
 	"strings"
@@ -67,33 +66,33 @@ func (m *AdminPlugin) OnPrivmsg(event *irc.Event) {
 	}
 
 	if strings.Contains(message, config.CommandPrefix+"op") {
-		args:=util.StripPluginCommand(message,config.CommandPrefix,"join")
+		args := util.StripPluginCommand(message, config.CommandPrefix, "join")
 		if args != "" {
 			conn.SendRaw("MODE +o " + destination + " " + args)
 		}
 	}
 	if strings.Contains(message, config.CommandPrefix+"join") {
-		args:=util.StripPluginCommand(message,config.CommandPrefix,"join")
+		args := util.StripPluginCommand(message, config.CommandPrefix, "join")
 		if args != "" {
 			conn.Join(args)
 		}
 	}
 	if strings.Contains(message, config.CommandPrefix+"part") {
-		args:=util.StripPluginCommand(message,config.CommandPrefix,"part")
+		args := util.StripPluginCommand(message, config.CommandPrefix, "part")
 		if args != "" {
-			conn.SendRaw("PART "+args)
+			conn.SendRaw("PART " + args)
 		}
 	}
 
 	if strings.Contains(message, config.CommandPrefix+"deop") {
-		args:=util.StripPluginCommand(message,config.CommandPrefix,"part")
+		args := util.StripPluginCommand(message, config.CommandPrefix, "part")
 		if args != "" {
 			conn.SendRaw("MODE -o " + destination + " " + args)
 		}
 	}
 
 	if strings.Contains(message, config.CommandPrefix+"kick") {
-		args:=util.StripPluginCommand(message,config.CommandPrefix,"part")
+		args := util.StripPluginCommand(message, config.CommandPrefix, "part")
 		if args != "" {
 			conn.SendRaw("KICK " + destination + " " + args + " :RESOLVED->KICKED")
 		}
@@ -102,23 +101,23 @@ func (m *AdminPlugin) OnPrivmsg(event *irc.Event) {
 	if strings.Contains(message, config.CommandPrefix+"update") {
 		url := util.StripPluginCommand(message, config.CommandPrefix, "update")
 		if url != "" {
-				err := doUpdate(url)
-				if err != nil {
-					conn.Privmsg(destination, err.Error())
-				}
+			err := doUpdate(url)
+			if err != nil {
+				conn.Privmsg(destination, err.Error())
+			}
 		}
 	}
 
 }
 
 func doUpdate(url string) error {
-    resp, err := http.Get(url)
-    if err != nil {
-        return err
-    }
-    defer resp.Body.Close()
-    err = update.Apply(resp.Body, update.Options{})
-    return err
+	resp, err := http.Get(url)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	err = update.Apply(resp.Body, update.Options{})
+	return err
 }
 
 func ListPlugins(sendTo string, conn *irc.Connection) {

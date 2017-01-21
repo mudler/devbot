@@ -21,9 +21,9 @@ func (m *GentooBugzillaPlugin) OnPrivmsg(event *irc.Event) {
 
 	conn := plugin_registry.Conn
 	destination := event.Arguments[0]
-  if event.Arguments[0] == plugin_registry.Config.BotNick {
-    destination = event.Nick
-  }
+	if event.Arguments[0] == plugin_registry.Config.BotNick {
+		destination = event.Nick
+	}
 
 	// Detect if in chats are written bugs id like #12345
 	regex, _ := regexp.Compile(`(?:^|\s)[＃#]{1}(\w+)`)

@@ -22,10 +22,10 @@ func (m *HelperPlugin) OnPrivmsg(event *irc.Event) {
 	conn := plugin_registry.Conn
 	config := plugin_registry.Config
 	message := event.Message()
-  destination := event.Arguments[0]
-  if event.Arguments[0] == config.BotNick {
-    destination = event.Nick
-  }
+	destination := event.Arguments[0]
+	if event.Arguments[0] == config.BotNick {
+		destination = event.Nick
+	}
 
 	switch {
 	case strings.Contains(message, "help"):
