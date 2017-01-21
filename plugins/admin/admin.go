@@ -4,6 +4,10 @@ import (
 	"github.com/mudler/devbot/shared/registry"
 	"github.com/mudler/devbot/shared/utils"
 	"github.com/thoj/go-ircevent"
+	"net/http"
+
+	 "github.com/inconshreveable/go-update"
+
 
 	"log"
 	"strings"
@@ -40,6 +44,7 @@ func (m *AdminPlugin) OnPrivmsg(event *irc.Event) {
 		conn.Privmsg(destination, "\t"+config.CommandPrefix+"deop <nick> - Deop nick on channel")
 		conn.Privmsg(destination, "\t"+config.CommandPrefix+"kick <nick> - kick nick on channel")
 		conn.Privmsg(destination, "\t"+config.CommandPrefix+"join <channel> - join channel")
+		conn.Privmsg(destination, "\t"+config.CommandPrefix+"update <url> - update bot with the given url")
 
 	}
 
@@ -57,7 +62,6 @@ func (m *AdminPlugin) OnPrivmsg(event *irc.Event) {
 		args := util.StripPluginCommand(message, config.CommandPrefix, "disable")
 		if plugin_registry.DisablePlugin(args) {
 			conn.Privmsg(destination, args+" Disabled")
-
 		}
 		ListPlugins(destination, conn)
 	}
@@ -95,6 +99,26 @@ func (m *AdminPlugin) OnPrivmsg(event *irc.Event) {
 		}
 	}
 
+	if strings.Contains(message, config.CommandPrefix+"update") {
+		url := util.StripPluginCommand(message, config.CommandPrefix, "update")
+		if url != "" {
+				err := doUpdate(url)
+				if err != nil {
+					conn.Privmsg(destination, err.Error())
+				}
+		}
+	}
+
+}
+
+func doUpdate(url string) error {
+    resp, err := http.Get(url)
+    if err != nil {
+        return err
+    }
+    defer resp.Body.Close()
+    err = update.Apply(resp.Body, update.Options{})
+    return err
 }
 
 func ListPlugins(sendTo string, conn *irc.Connection) {

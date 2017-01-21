@@ -50,14 +50,14 @@ func (m *LoggerPlugin) OnJoin(event *irc.Event) {
 
 func ChannelLogger(Log string, UserNick string, message string) {
 	STime := time.Now().UTC().Format(time.ANSIC)
-	log := strings.Replace(Log, "#", "", 1)
-	logFile := fmt.Sprintf("%s.log", log)
+	log_file := strings.Replace(Log, "#", "", 1)
+	logFile := fmt.Sprintf("%s.log", log_file)
 
 	//Open the file for writing With Append Flag to create file persistence
 	f, err := os.OpenFile(logFile, os.O_RDWR|os.O_APPEND|os.O_SYNC, 0666)
 	if err != nil {
 		fmt.Println(err)
-		LogFile(logFile)
+		LogFile(log_file)
 		f, err = os.OpenFile(logFile, os.O_RDWR|os.O_APPEND|os.O_SYNC, 0666)
 	}
 
