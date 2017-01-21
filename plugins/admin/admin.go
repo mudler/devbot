@@ -43,6 +43,7 @@ func (m *AdminPlugin) OnPrivmsg(event *irc.Event) {
 		conn.Privmsg(destination, "\t"+config.CommandPrefix+"deop <nick> - Deop nick on channel")
 		conn.Privmsg(destination, "\t"+config.CommandPrefix+"kick <nick> - kick nick on channel")
 		conn.Privmsg(destination, "\t"+config.CommandPrefix+"join <channel> - join channel")
+		conn.Privmsg(destination, "\t"+config.CommandPrefix+"part <channel> - part channel")
 		conn.Privmsg(destination, "\t"+config.CommandPrefix+"update <url> - update bot with the given url")
 
 	}
