@@ -1,0 +1,15 @@
+language: go
+go:
+  - 1.6
+env:
+  - "GO15VENDOREXPERIMENT=1"
+before_install:
+  - make deps
+script:
+  - make test
+  - make lint
+  - make
+after_success:
+  - git config --global user.name "Deployer" && git config --global user.email foo@bar.com
+  - go get github.com/tcnksm/ghr
+  - ghr -u mudler -r devbot --replace --debug $TRAVIS_TAG release/
