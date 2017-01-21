@@ -67,9 +67,9 @@ func (m *AdminPlugin) OnPrivmsg(event *irc.Event) {
 	}
 
 	if strings.Contains(message, config.CommandPrefix+"op") {
-		args := util.StripPluginCommand(message, config.CommandPrefix, "join")
+		args := util.StripPluginCommand(message, config.CommandPrefix, "op")
 		if args != "" {
-			conn.SendRaw("MODE +o " + destination + " " + args)
+			conn.SendRaw("MODE " + destination + " +o " + args)
 		}
 	}
 	if strings.Contains(message, config.CommandPrefix+"join") {
@@ -86,14 +86,14 @@ func (m *AdminPlugin) OnPrivmsg(event *irc.Event) {
 	}
 
 	if strings.Contains(message, config.CommandPrefix+"deop") {
-		args := util.StripPluginCommand(message, config.CommandPrefix, "part")
+		args := util.StripPluginCommand(message, config.CommandPrefix, "deop")
 		if args != "" {
-			conn.SendRaw("MODE -o " + destination + " " + args)
+			conn.SendRaw("MODE " + destination + " -o " + args)
 		}
 	}
 
 	if strings.Contains(message, config.CommandPrefix+"kick") {
-		args := util.StripPluginCommand(message, config.CommandPrefix, "part")
+		args := util.StripPluginCommand(message, config.CommandPrefix, "kick")
 		if args != "" {
 			conn.SendRaw("KICK " + destination + " " + args + " :RESOLVED->KICKED")
 		}
@@ -102,9 +102,12 @@ func (m *AdminPlugin) OnPrivmsg(event *irc.Event) {
 	if strings.Contains(message, config.CommandPrefix+"update") {
 		url := util.StripPluginCommand(message, config.CommandPrefix, "update")
 		if url != "" {
-			err := doUpdate(url)
+			  conn.Privmsg(destination, "Upgrading with "+url)
+				err := doUpdate(url)
 			if err != nil {
 				conn.Privmsg(destination, err.Error())
+			} else {
+				conn.Privmsg(destination, "Everything went OK :)")
 			}
 		}
 	}
