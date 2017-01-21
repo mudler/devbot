@@ -4,10 +4,11 @@ go:
 env:
   - "GO15VENDOREXPERIMENT=1"
 before_install:
-  - make
+  - make deps
 script:
   - make test
-  - make install
+  - make lint
+  - make
 after_success:
   - git config --global user.name "Deployer" && git config --global user.email foo@bar.com
   - go get github.com/tcnksm/ghr

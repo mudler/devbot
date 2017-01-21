@@ -1,0 +1,15 @@
+package: github.com/mudler/devbot
+import:
+- package: github.com/darthlukan/goduckgo
+  subpackages:
+  - goduckgo
+- package: github.com/dghubble/sling
+  version: ^1.1.0
+- package: github.com/inconshreveable/go-update
+- package: github.com/kennygrant/sanitize
+  version: ^1.2.0
+- package: github.com/mattn/go-getopt
+- package: github.com/mudler/go.cobe
+- package: github.com/thoj/go-ircevent
+  version: ^0.1.0
+- package: golang.org/x/oauth2
