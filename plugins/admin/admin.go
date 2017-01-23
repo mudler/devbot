@@ -1,15 +1,16 @@
 package admin
 
 import (
+	"github.com/inconshreveable/go-update"
 	"github.com/mudler/devbot/shared/registry"
 	"github.com/mudler/devbot/shared/utils"
 	"github.com/thoj/go-ircevent"
-	"net/http"
-
-	"github.com/inconshreveable/go-update"
-
 	"log"
+	"net/http"
+	"os"
+	"os/exec"
 	"strings"
+	"syscall"
 )
 
 type AdminPlugin struct{}
@@ -102,12 +103,15 @@ func (m *AdminPlugin) OnPrivmsg(event *irc.Event) {
 	if strings.Contains(message, config.CommandPrefix+"update") {
 		url := util.StripPluginCommand(message, config.CommandPrefix, "update")
 		if url != "" {
-			  conn.Privmsg(destination, "Upgrading with "+url)
-				err := doUpdate(url)
+			conn.Privmsg(destination, "Upgrading with "+url)
+			err := doUpdate(url)
 			if err != nil {
 				conn.Privmsg(destination, err.Error())
 			} else {
 				conn.Privmsg(destination, "Everything went OK :)")
+				ForkExec()
+				conn.Privmsg(destination, "If all went straight you should me joining again")
+				os.Exit(0)
 			}
 		}
 	}
@@ -137,4 +141,37 @@ func ListPlugins(sendTo string, conn *irc.Connection) {
 		conn.Privmsg(sendTo, "\t"+k)
 	}
 
+}
+
+func lookPath() (argv0 string, err error) {
+	argv0, err = exec.LookPath(os.Args[0])
+	if nil != err {
+		return
+	}
+	if _, err = os.Stat(argv0); nil != err {
+		return
+	}
+	return
+}
+
+func ForkExec() error {
+	argv0, err := lookPath()
+	if nil != err {
+		return err
+	}
+	wd, err := os.Getwd()
+	if nil != err {
+		return err
+	}
+
+	p, err := os.StartProcess(argv0, os.Args, &os.ProcAttr{
+		Dir: wd,
+		Sys: &syscall.SysProcAttr{},
+	})
+	if nil != err {
+		return err
+	}
+	log.Println("spawned child", p.Pid)
+
+	return nil
 }
