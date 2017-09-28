@@ -4,7 +4,25 @@ import (
 	"math/rand"
 	"strconv"
 	"strings"
+	"time"
 )
+
+func RecurringTimer(what func(), delay time.Duration) chan bool {
+	stop := make(chan bool)
+
+	go func() {
+		for {
+			what()
+			select {
+			case <-time.After(delay):
+			case <-stop:
+				return
+			}
+		}
+	}()
+
+	return stop
+}
 
 func RandomFromArray(array []string) string {
 	return array[rand.Intn(len(array))]
