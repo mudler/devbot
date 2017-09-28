@@ -1,16 +1,17 @@
 package gentoobug
 
 import (
-	"github.com/mudler/devbot/shared/registry"
-	"github.com/thoj/go-ircevent"
 	"log"
 	"regexp"
+
+	"github.com/mudler/devbot/bot"
+	"github.com/thoj/go-ircevent"
 )
 
 type GentooBugzillaPlugin struct{}
 
 func init() {
-	plugin_registry.RegisterPlugin(&GentooBugzillaPlugin{})
+	bot.RegisterPlugin(&GentooBugzillaPlugin{})
 }
 
 func (m *GentooBugzillaPlugin) Register() {
@@ -19,9 +20,9 @@ func (m *GentooBugzillaPlugin) Register() {
 
 func (m *GentooBugzillaPlugin) OnPrivmsg(event *irc.Event) {
 
-	conn := plugin_registry.Conn
+	conn := bot.Conn
 	destination := event.Arguments[0]
-	if event.Arguments[0] == plugin_registry.Config.BotNick {
+	if event.Arguments[0] == bot.Config.BotNick {
 		destination = event.Nick
 	}
 

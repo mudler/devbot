@@ -1,13 +1,14 @@
 package brain
 
 import (
-	"github.com/mudler/devbot/shared/registry"
+	"github.com/mudler/devbot/bot"
 	cobe "github.com/mudler/go.cobe"
 
-	"github.com/thoj/go-ircevent"
 	"log"
 	"regexp"
 	"strings"
+
+	"github.com/thoj/go-ircevent"
 )
 
 type BrainPlugin struct {
@@ -15,12 +16,12 @@ type BrainPlugin struct {
 }
 
 func init() {
-	plugin_registry.RegisterPlugin(&BrainPlugin{})
+	bot.RegisterPlugin(&BrainPlugin{})
 }
 
 func (m *BrainPlugin) Register() {
 	log.Println("[BrainPlugin] Started")
-	b, err := cobe.OpenCobe2Brain(plugin_registry.Config.BrainFile)
+	b, err := cobe.OpenCobe2Brain(bot.Config.BrainFile)
 	m.Brain = b
 	if err != nil {
 		log.Fatalf("Opening brain file: %s", err)
@@ -28,8 +29,8 @@ func (m *BrainPlugin) Register() {
 }
 
 func (m *BrainPlugin) OnPrivmsg(event *irc.Event) {
-	conn := plugin_registry.Conn
-	config := plugin_registry.Config
+	conn := bot.Conn
+	config := bot.Config
 	message := event.Message()
 	destination := event.Arguments[0]
 	if event.Arguments[0] == config.BotNick {

@@ -1,7 +1,7 @@
 package helper
 
 import (
-	"github.com/mudler/devbot/shared/registry"
+	"github.com/mudler/devbot/bot"
 	"github.com/thoj/go-ircevent"
 
 	"log"
@@ -11,7 +11,7 @@ import (
 type HelperPlugin struct{}
 
 func init() {
-	plugin_registry.RegisterPlugin(&HelperPlugin{})
+	bot.RegisterPlugin(&HelperPlugin{})
 }
 
 func (m *HelperPlugin) Register() {
@@ -19,8 +19,8 @@ func (m *HelperPlugin) Register() {
 }
 
 func (m *HelperPlugin) OnPrivmsg(event *irc.Event) {
-	conn := plugin_registry.Conn
-	config := plugin_registry.Config
+	conn := bot.Conn
+	config := bot.Config
 	message := event.Message()
 	destination := event.Arguments[0]
 	if event.Arguments[0] == config.BotNick {

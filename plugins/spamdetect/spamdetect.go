@@ -1,17 +1,18 @@
 package spamdetect
 
 import (
-	"github.com/mudler/devbot/shared/registry"
+	"github.com/mudler/devbot/bot"
 	"github.com/mudler/devbot/shared/utils"
 
-	"github.com/thoj/go-ircevent"
 	"log"
+
+	"github.com/thoj/go-ircevent"
 )
 
 type SpamDetectPlugin struct{}
 
 func init() {
-	plugin_registry.RegisterPlugin(&SpamDetectPlugin{})
+	bot.RegisterPlugin(&SpamDetectPlugin{})
 }
 
 func (m *SpamDetectPlugin) Register() {
@@ -19,8 +20,8 @@ func (m *SpamDetectPlugin) Register() {
 }
 
 func (m *SpamDetectPlugin) OnPrivmsg(event *irc.Event) {
-	conn := plugin_registry.Conn
-	config := plugin_registry.Config
+	conn := bot.Conn
+	config := bot.Config
 	client := NewClient(config.UClassifyKey)
 	results, _, _ := client.ClassifyService.Classify(config.UClassifyUser, config.UClassifyClassifier, []string{event.Message()})
 

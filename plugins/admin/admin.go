@@ -1,22 +1,24 @@
 package admin
 
 import (
-	"github.com/inconshreveable/go-update"
-	"github.com/mudler/devbot/shared/registry"
-	"github.com/mudler/devbot/shared/utils"
-	"github.com/thoj/go-ircevent"
 	"log"
 	"net/http"
 	"os"
 	"os/exec"
 	"strings"
 	"syscall"
+
+	util "github.com/mudler/devbot/shared/utils"
+
+	"github.com/inconshreveable/go-update"
+	"github.com/mudler/devbot/bot"
+	"github.com/thoj/go-ircevent"
 )
 
 type AdminPlugin struct{}
 
 func init() {
-	plugin_registry.RegisterPlugin(&AdminPlugin{})
+	bot.RegisterPlugin(&AdminPlugin{})
 }
 
 func (m *AdminPlugin) Register() {
@@ -24,8 +26,8 @@ func (m *AdminPlugin) Register() {
 }
 
 func (m *AdminPlugin) OnPrivmsg(event *irc.Event) {
-	conn := plugin_registry.Conn
-	config := plugin_registry.Config
+	conn := bot.Conn
+	config := bot.Config
 	message := event.Message()
 	destination := event.Arguments[0]
 	if event.Arguments[0] == config.BotNick {
@@ -54,14 +56,14 @@ func (m *AdminPlugin) OnPrivmsg(event *irc.Event) {
 	}
 	if strings.Contains(message, config.CommandPrefix+"enable") {
 		args := util.StripPluginCommand(message, config.CommandPrefix, "enable")
-		if plugin_registry.EnablePlugin(args) {
+		if bot.EnablePlugin(args) {
 			conn.Privmsg(destination, args+" Enabled")
 		}
 		ListPlugins(destination, conn)
 	}
 	if strings.Contains(message, config.CommandPrefix+"disable") {
 		args := util.StripPluginCommand(message, config.CommandPrefix, "disable")
-		if plugin_registry.DisablePlugin(args) {
+		if bot.DisablePlugin(args) {
 			conn.Privmsg(destination, args+" Disabled")
 		}
 		ListPlugins(destination, conn)
@@ -131,13 +133,13 @@ func doUpdate(url string) error {
 func ListPlugins(sendTo string, conn *irc.Connection) {
 
 	conn.Privmsg(sendTo, "Enabled plugins: ")
-	for k, _ := range plugin_registry.Plugins {
+	for k, _ := range bot.Plugins {
 		conn.Privmsg(sendTo, "\t"+k)
 
 	}
 	conn.Privmsg(sendTo, "Disabled plugins: ")
 
-	for k, _ := range plugin_registry.DisabledPlugins {
+	for k, _ := range bot.DisabledPlugins {
 		conn.Privmsg(sendTo, "\t"+k)
 	}
 

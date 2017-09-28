@@ -1,8 +1,8 @@
 package sabayonbug
 
 import (
+	"github.com/mudler/devbot/bot"
 	"github.com/mudler/devbot/plugins/gentoobug"
-	"github.com/mudler/devbot/shared/registry"
 
 	"github.com/thoj/go-ircevent"
 
@@ -13,7 +13,7 @@ import (
 type SabayonBugzillaPlugin struct{}
 
 func init() {
-	plugin_registry.RegisterPlugin(&SabayonBugzillaPlugin{})
+	bot.RegisterPlugin(&SabayonBugzillaPlugin{})
 }
 
 func (m *SabayonBugzillaPlugin) Register() {
@@ -21,9 +21,9 @@ func (m *SabayonBugzillaPlugin) Register() {
 }
 
 func (m *SabayonBugzillaPlugin) OnPrivmsg(event *irc.Event) {
-	conn := plugin_registry.Conn
+	conn := bot.Conn
 	destination := event.Arguments[0]
-	if event.Arguments[0] == plugin_registry.Config.BotNick {
+	if event.Arguments[0] == bot.Config.BotNick {
 		destination = event.Nick
 	}
 

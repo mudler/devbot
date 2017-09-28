@@ -1,7 +1,7 @@
 package logger
 
 import (
-	"github.com/mudler/devbot/shared/registry"
+	"github.com/mudler/devbot/bot"
 	"github.com/thoj/go-ircevent"
 
 	"fmt"
@@ -15,7 +15,7 @@ import (
 type LoggerPlugin struct{}
 
 func init() {
-	plugin_registry.RegisterPlugin(&LoggerPlugin{})
+	bot.RegisterPlugin(&LoggerPlugin{})
 }
 
 func (m *LoggerPlugin) Register() {
@@ -23,22 +23,22 @@ func (m *LoggerPlugin) Register() {
 }
 func (m *LoggerPlugin) OnQuit(event *irc.Event) {
 	message := fmt.Sprintf("%s exited", event.Nick)
-	go ChannelLogger(plugin_registry.Config.LogDir+"/"+event.Arguments[0], event.Nick, message)
+	go ChannelLogger(bot.Config.LogDir+"/"+event.Arguments[0], event.Nick, message)
 }
 func (m *LoggerPlugin) OnPart(event *irc.Event) {
 	message := fmt.Sprintf("%s left the room", event.Nick)
-	go ChannelLogger(plugin_registry.Config.LogDir+"/"+event.Arguments[0], event.Nick, message)
+	go ChannelLogger(bot.Config.LogDir+"/"+event.Arguments[0], event.Nick, message)
 }
 func (m *LoggerPlugin) OnPrivmsg(event *irc.Event) {
 	destination := event.Arguments[0]
-	if event.Arguments[0] == plugin_registry.Config.BotNick {
+	if event.Arguments[0] == bot.Config.BotNick {
 		destination = event.Nick
 	}
-	go ChannelLogger(plugin_registry.Config.LogDir+"/"+destination, event.Nick+": ", event.Message())
+	go ChannelLogger(bot.Config.LogDir+"/"+destination, event.Nick+": ", event.Message())
 }
 
 func (m *LoggerPlugin) OnJoin(event *irc.Event) {
-	config := plugin_registry.Config
+	config := bot.Config
 
 	if event.Nick == config.BotNick {
 		LogDir(config.LogDir)

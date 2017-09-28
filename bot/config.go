@@ -1,4 +1,4 @@
-package util
+package bot
 
 import (
 	"encoding/json"
@@ -6,8 +6,8 @@ import (
 	"os"
 )
 
-//Configuration needed for plugins and bot
-type Config struct {
+//Configurationuration needed for plugins and bot
+type Configuration struct {
 	// !quit !part the prefix is "!"
 	CommandPrefix string
 	// Server to connect to, format ip:port
@@ -28,6 +28,7 @@ type Config struct {
 	Forums              string
 	Bugs                string
 	BrainFile           string
+	DBFile              string
 	Debug               bool
 	Welcome             bool
 	WelcomeMessage      string
@@ -38,39 +39,37 @@ type Config struct {
 	Plugins             map[string]bool
 }
 
-func (c *Config) IsAdmin(user string) bool {
+func (c *Configuration) IsAdmin(user string) bool {
 	_, ok := c.Administrators[user]
 	return ok
 }
 
-func (c *Config) EnabledPlugin(plugin string) bool {
+func (c *Configuration) EnabledPlugin(plugin string) bool {
 	v, _ := c.Plugins[plugin]
 	return v
 }
 
-func LoadConfig(f string) (Config, error) {
+func LoadConfig(f string) (Configuration, error) {
 
 	file, err := os.Open(f)
 
 	if err != nil {
-		fmt.Println("Couldn't read config file")
-		return Config{}, err
+		fmt.Println("Couldn't read Configuration file")
+		return Configuration{}, err
 	}
 	defer file.Close()
 
 	decoder := json.NewDecoder(file)
-	var config Config
-	config.BrainFile = "cobe.brain"
-	config.MessageOnJoin = false
-	config.Welcome = false
-	config.Debug = false
-	config.UClassifyClassifier = "Spam"
-	config.UClassifyUser = "mudler"
-	err = decoder.Decode(&config)
+	var Config Configuration
+	Config.BrainFile = "cobe.brain"
+	Config.DBFile = "bot.db"
+	Config.MessageOnJoin = false
+	Config.Welcome = false
+	Config.Debug = false
+	err = decoder.Decode(&Config)
 	if err != nil {
 		fmt.Println("Couldn't parse json file")
-		return Config{}, err
+		return Configuration{}, err
 	}
-	return config, err
-
+	return Config, err
 }

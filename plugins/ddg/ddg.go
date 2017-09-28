@@ -2,19 +2,21 @@ package ddg
 
 import (
 	"fmt"
-	"github.com/darthlukan/goduckgo/goduckgo"
-	"github.com/mudler/devbot/plugins/urlpreview"
-	"github.com/mudler/devbot/shared/registry"
 
-	"github.com/thoj/go-ircevent"
+	"github.com/darthlukan/goduckgo/goduckgo"
+	"github.com/mudler/devbot/bot"
+	"github.com/mudler/devbot/plugins/urlpreview"
+
 	"log"
 	"strings"
+
+	"github.com/thoj/go-ircevent"
 )
 
 type DDGPlugin struct{}
 
 func init() {
-	plugin_registry.RegisterPlugin(&DDGPlugin{})
+	bot.RegisterPlugin(&DDGPlugin{})
 }
 
 func (m *DDGPlugin) Register() {
@@ -22,8 +24,8 @@ func (m *DDGPlugin) Register() {
 }
 
 func (m *DDGPlugin) OnPrivmsg(event *irc.Event) {
-	conn := plugin_registry.Conn
-	config := plugin_registry.Config
+	conn := bot.Conn
+	config := bot.Config
 	var (
 		msg      string
 		msgArray []string

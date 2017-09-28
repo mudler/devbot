@@ -2,19 +2,20 @@ package urlpreview
 
 import (
 	"fmt"
-	"github.com/mudler/devbot/shared/registry"
-	"github.com/thoj/go-ircevent"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"regexp"
 	"strings"
+
+	"github.com/mudler/devbot/bot"
+	"github.com/thoj/go-ircevent"
 )
 
 type UrlPreviewPlugin struct{}
 
 func init() {
-	plugin_registry.RegisterPlugin(&UrlPreviewPlugin{})
+	bot.RegisterPlugin(&UrlPreviewPlugin{})
 }
 
 func (m *UrlPreviewPlugin) Register() {
@@ -22,10 +23,10 @@ func (m *UrlPreviewPlugin) Register() {
 }
 
 func (m *UrlPreviewPlugin) OnPrivmsg(event *irc.Event) {
-	conn := plugin_registry.Conn
+	conn := bot.Conn
 	message := event.Message()
 	destination := event.Arguments[0]
-	if event.Arguments[0] == plugin_registry.Config.BotNick {
+	if event.Arguments[0] == bot.Config.BotNick {
 		destination = event.Nick
 	}
 

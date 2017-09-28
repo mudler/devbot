@@ -13,3 +13,5 @@ import:
 - package: github.com/thoj/go-ircevent
   version: ^0.1.0
 - package: golang.org/x/oauth2
+- package: github.com/boltdb/bolt
+  version: v1.3.1

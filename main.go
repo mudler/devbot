@@ -4,12 +4,9 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"strconv"
 
 	. "github.com/mattn/go-getopt"
-	"github.com/mudler/devbot/shared/registry"
-	"github.com/mudler/devbot/shared/utils"
-	"github.com/thoj/go-ircevent"
+	"github.com/mudler/devbot/bot"
 
 	_ "github.com/mudler/devbot/plugins/admin"
 	_ "github.com/mudler/devbot/plugins/brain"
@@ -45,7 +42,10 @@ func main() {
 		}
 	}
 	fmt.Println("Configuration file: " + configurationFile)
-	config, err := util.LoadConfig(configurationFile)
+	config, err := bot.LoadConfig(configurationFile)
+	if err != nil {
+		log.Fatal("Error loading configuration file: " + err.Error())
+	}
 
 	if logFile != "" {
 		//Set logging to file
@@ -54,102 +54,11 @@ func main() {
 			log.Fatal("error opening file: %v", err)
 		}
 		defer f.Close()
+		fmt.Println("Log file: " + logFile)
 
 		log.SetOutput(f)
 	}
-
-	conn := irc.IRC(config.BotNick, config.BotUser)
-	conn.UseTLS = config.Tls
-
-	fmt.Println("BotNick:\t" + config.BotNick)
-	fmt.Println("BotUser:\t" + config.BotUser)
-	fmt.Println("Channels:")
-	for _, channel := range config.Channel {
-		fmt.Println("\t" + channel)
+	for {
+		bot.Start(config)
 	}
-
-	if err != nil {
-		fmt.Println("Failed to connect.")
-		panic(err)
-	}
-
-	plugin_registry.Config = config
-	plugin_registry.Conn = conn
-
-	// Bootstrapper for plugins
-	for _, d := range plugin_registry.Plugins {
-		if (len(config.Plugins) > 0 && config.EnabledPlugin(plugin_registry.KeyOf(d))) || len(config.Plugins) == 0 {
-			go d.Register()
-		}
-	}
-
-	// Bootstrapper for plugins
-	for _, d := range plugin_registry.Plugins {
-		if len(config.Plugins) > 0 && !config.EnabledPlugin(plugin_registry.KeyOf(d)) {
-			plugin_registry.DisablePlugin(plugin_registry.KeyOf(d))
-		}
-	}
-
-	log.Println(strconv.Itoa(len(plugin_registry.Plugins)) + " plugins loaded")
-
-	if logFile != "" {
-		fmt.Println("Log file: " + logFile)
-	}
-
-	conn.AddCallback("001", func(e *irc.Event) {
-		for _, channel := range config.Channel {
-			conn.Join(channel)
-		}
-		if config.BotNickPassword != "" {
-			log.Println("Identifying bot nickname against NickServ")
-			conn.Privmsg("NickServ", "IDENTIFY "+config.BotNickPassword)
-		}
-	})
-
-	conn.AddCallback("PRIVMSG", func(event *irc.Event) {
-		for _, d := range plugin_registry.Plugins {
-			if obj, ok := d.(interface {
-				OnPrivmsg(*irc.Event)
-			}); ok {
-				go obj.OnPrivmsg(event)
-			}
-		}
-	})
-	conn.AddCallback("JOIN", func(event *irc.Event) {
-		for _, d := range plugin_registry.Plugins {
-			if obj, ok := d.(interface {
-				OnJoin(*irc.Event)
-			}); ok {
-				go obj.OnJoin(event)
-			}
-		}
-
-	})
-	conn.AddCallback("PART", func(event *irc.Event) {
-		for _, d := range plugin_registry.Plugins {
-			if obj, ok := d.(interface {
-				OnPart(*irc.Event)
-			}); ok { //Check if plugin has that method
-				go obj.OnPart(event)
-			}
-		}
-	})
-	conn.AddCallback("QUIT", func(event *irc.Event) {
-		for _, d := range plugin_registry.Plugins {
-			if obj, ok := d.(interface {
-				OnQuit(*irc.Event)
-			}); ok { //Check if plugin has that method
-				go obj.OnQuit(event)
-			}
-		}
-
-	})
-
-	err = conn.Connect(config.Server)
-	if config.Debug {
-		conn.Debug = true
-	}
-
-	conn.Loop()
-
 }
