@@ -2,6 +2,7 @@
 package bot
 
 import (
+	"crypto/tls"
 	"fmt"
 	"log"
 	"reflect"
@@ -90,8 +91,12 @@ func UnregisterCommand(command string) {
 
 func Start(config Configuration) {
 	conn := irc.IRC(config.BotNick, config.BotUser)
-	conn.UseTLS = config.Tls
 
+	if config.UnsecureTLS == true {
+		conn.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+	}
+
+	conn.UseTLS = config.Tls
 	fmt.Println("BotNick:\t" + config.BotNick)
 	fmt.Println("BotUser:\t" + config.BotUser)
 	fmt.Println("Channels:")
@@ -118,15 +123,14 @@ func Start(config Configuration) {
 	}
 
 	log.Println(strconv.Itoa(len(Plugins)) + " plugins loaded")
-
+	RegisterCallbacks(conn)
 	if err := conn.Connect(config.Server); err != nil {
 		log.Println("Connection failed: " + err.Error())
+		return
 	}
 	if config.Debug {
 		conn.Debug = true
 	}
-	RegisterCallbacks(conn)
-	conn.VerboseCallbackHandler = true
 	conn.Loop()
 }
 

@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
-	"log"
-	"os"
-
 	. "github.com/mattn/go-getopt"
 	"github.com/mudler/devbot/bot"
+	"log"
+	"os"
+	"time"
 
 	_ "github.com/mudler/devbot/plugins/admin"
 	_ "github.com/mudler/devbot/plugins/brain"
@@ -64,5 +64,6 @@ func main() {
 	}
 	for {
 		bot.Start(config)
+		time.Sleep(1000 * time.Millisecond)
 	}
 }

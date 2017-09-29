@@ -35,6 +35,7 @@ type Configuration struct {
 	JoinMessage         string
 	MessageOnJoin       bool
 	Tls                 bool
+	UnsecureTLS         bool
 	Administrators      map[string]bool
 	Plugins             map[string]bool
 }
@@ -66,6 +67,7 @@ func LoadConfig(f string) (Configuration, error) {
 	Config.MessageOnJoin = false
 	Config.Welcome = false
 	Config.Debug = false
+	Config.UnsecureTLS = false
 	err = decoder.Decode(&Config)
 	if err != nil {
 		fmt.Println("Couldn't parse json file")
