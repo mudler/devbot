@@ -34,7 +34,7 @@ func (m *GentooBugzillaPlugin) OnPrivmsg(event *irc.Event) {
 	if len(bug) > 1 {
 		buginfo := BugInfo("https://bugs.gentoo.org/show_bug.cgi?id=", bug[1])
 		if buginfo.Summary != "" {
-			conn.Privmsg(destination, buginfo.Url+"; "+buginfo.Summary+"; "+buginfo.AssignedTo+"; "+buginfo.Status+"; ")
+			conn.Privmsg(destination, buginfo.Url+" - "+buginfo.Summary+" - "+buginfo.AssignedTo+" - "+buginfo.Status)
 		}
 	}
 

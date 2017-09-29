@@ -34,7 +34,7 @@ func (m *Plugin) OnPrivmsg(event *irc.Event) {
 	if len(bug) > 1 {
 		buginfo := BugInfo("https://progress.opensuse.org/issues/", bug[1])
 		if buginfo.Summary != "" {
-			conn.Privmsg(destination, buginfo.Url+"; "+buginfo.Summary+"; "+buginfo.Status+"; ")
+			conn.Privmsg(destination, buginfo.Url+" - "+buginfo.Summary+" - "+buginfo.Status)
 		}
 	}
 
