@@ -33,9 +33,23 @@ func (m *Plugin) OnPrivmsg(event *irc.Event) {
 		destination = event.Nick
 	}
 
-	cmdArray := strings.SplitAfterN(msg, bot.Config.CommandPrefix, 2)
-	if strings.Contains(msg, "subscribe") {
+	if bot.Config.IsAdmin(event.Nick) == false {
+		return
+	}
 
+	if strings.Contains(msg, bot.Config.CommandPrefix+"subscribe") {
+		atom_url := util.StripPluginCommand(msg, bot.Config.CommandPrefix, "subscribe")
+		bot.DBPutKey("subscriptions", atom_url)
+		if bot.DBPutKey("atom"+atom_url, destination) == true {
+			conn.Privmsg(destination, destination+" now is subscribed to "+atom_url)
+		}
+	}
+
+	if strings.Contains(msg, bot.Config.CommandPrefix+"unsubscribe") {
+		atom_url := util.StripPluginCommand(msg, bot.Config.CommandPrefix, "unsubscribe")
+		if bot.DBRemoveSingleKey("atom"+atom_url, destination) == true {
+			conn.Privmsg(destination, destination+" now is unsubscribed from "+atom_url)
+		}
 	}
 
 }

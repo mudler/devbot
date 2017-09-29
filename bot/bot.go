@@ -126,7 +126,7 @@ func Start(config Configuration) {
 		conn.Debug = true
 	}
 	RegisterCallbacks(conn)
-
+	conn.VerboseCallbackHandler = true
 	conn.Loop()
 }
 

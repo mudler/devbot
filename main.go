@@ -15,8 +15,12 @@ import (
 
 	_ "github.com/mudler/devbot/plugins/gentoobug"
 	_ "github.com/mudler/devbot/plugins/logger"
+	_ "github.com/mudler/devbot/plugins/progresstracker"
+	_ "github.com/mudler/devbot/plugins/rss"
 	_ "github.com/mudler/devbot/plugins/sabayonbug"
+	_ "github.com/mudler/devbot/plugins/seen"
 	_ "github.com/mudler/devbot/plugins/spamdetect"
+	_ "github.com/mudler/devbot/plugins/team"
 
 	_ "github.com/mudler/devbot/plugins/urlpreview"
 )
