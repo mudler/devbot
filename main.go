@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
-	. "github.com/mattn/go-getopt"
-	"github.com/mudler/devbot/bot"
 	"log"
 	"os"
 	"time"
+
+	. "github.com/mattn/go-getopt"
+	"github.com/mudler/devbot/bot"
 
 	_ "github.com/mudler/devbot/plugins/admin"
 	_ "github.com/mudler/devbot/plugins/brain"
@@ -15,6 +16,7 @@ import (
 
 	_ "github.com/mudler/devbot/plugins/gentoobug"
 	_ "github.com/mudler/devbot/plugins/logger"
+	_ "github.com/mudler/devbot/plugins/perl"
 	_ "github.com/mudler/devbot/plugins/progresstracker"
 	_ "github.com/mudler/devbot/plugins/rss"
 	_ "github.com/mudler/devbot/plugins/sabayonbug"
