@@ -31,6 +31,13 @@ func SetupTimer(s string, a *anagent.Anagent) {
 	recurring, _ := strconv.Atoi(split[4]) // minutes
 
 	a.Timer(anagent.TimerID(timer_name), when, time.Duration(recurring)*time.Minute, true, func() {
+
+		// Avoid to buzz on weekends
+		day := time.Now().Weekday().String()
+		if day == "Saturday" || day == "Sunday" {
+			return
+		}
+
 		if atom, err := bot.DBListKeys("team" + team); err == nil {
 			bot.Conn.Privmsg(channel, team+" "+timer_name+": "+strings.Join(atom, " "))
 		}
