@@ -8,6 +8,7 @@ import (
 	"strings"
 	"syscall"
 
+	"github.com/mudler/anagent"
 	util "github.com/mudler/devbot/shared/utils"
 
 	"github.com/inconshreveable/go-update"
@@ -21,7 +22,7 @@ func init() {
 	bot.RegisterPlugin(&AdminPlugin{})
 }
 
-func (m *AdminPlugin) Register() {
+func (m *AdminPlugin) Register(a *anagent.Anagent) {
 	log.Println("[AdminPlugin] Started")
 }
 

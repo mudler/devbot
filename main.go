@@ -8,7 +8,6 @@ import (
 
 	. "github.com/mattn/go-getopt"
 	"github.com/mudler/devbot/bot"
-
 	_ "github.com/mudler/devbot/plugins/admin"
 	_ "github.com/mudler/devbot/plugins/brain"
 	_ "github.com/mudler/devbot/plugins/ddg"
@@ -32,6 +31,7 @@ func main() {
 	var c int
 	var configurationFile = "default.json"
 	var logFile string
+
 	OptErr = 0
 	for {
 		if c = Getopt("c:l:h"); c == EOF {
@@ -64,6 +64,7 @@ func main() {
 
 		log.SetOutput(f)
 	}
+
 	for {
 		bot.Start(config)
 		time.Sleep(1000 * time.Millisecond)

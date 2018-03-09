@@ -1,6 +1,7 @@
 package sabayonbug
 
 import (
+	"github.com/mudler/anagent"
 	"github.com/mudler/devbot/bot"
 	"github.com/mudler/devbot/plugins/gentoobug"
 
@@ -16,7 +17,7 @@ func init() {
 	bot.RegisterPlugin(&SabayonBugzillaPlugin{})
 }
 
-func (m *SabayonBugzillaPlugin) Register() {
+func (m *SabayonBugzillaPlugin) Register(a *anagent.Anagent) {
 	log.Println("[SabayonBugzillaPlugin] Started")
 }
 

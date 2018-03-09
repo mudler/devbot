@@ -9,11 +9,12 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/mudler/anagent"
 	"github.com/thoj/go-ircevent"
 )
 
 type DevbotPlugin interface {
-	Register()
+	Register(*anagent.Anagent)
 }
 
 // These are are registered plugins
@@ -23,6 +24,8 @@ var Commands = make(map[string]string)
 var Config Configuration
 var Conn *irc.Connection
 var DB string
+
+var Agent *anagent.Anagent
 
 // Register a Plugin
 func RegisterPlugin(p DevbotPlugin) {
@@ -92,6 +95,9 @@ func UnregisterCommand(command string) {
 func Start(config Configuration) {
 	conn := irc.IRC(config.BotNick, config.BotUser)
 
+	agent := anagent.New()
+	Agent = agent
+
 	if config.UnsecureTLS == true {
 		conn.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 	}
@@ -111,7 +117,7 @@ func Start(config Configuration) {
 	// Bootstrapper for plugins
 	for _, d := range Plugins {
 		if (len(config.Plugins) > 0 && config.EnabledPlugin(KeyOf(d))) || len(config.Plugins) == 0 {
-			go d.Register()
+			d.Register(agent)
 		}
 	}
 
@@ -131,7 +137,14 @@ func Start(config Configuration) {
 	if config.Debug {
 		conn.Debug = true
 	}
+	agent.Map(conn)
+
+	go func(a *anagent.Anagent) {
+		a.Start()
+	}(agent)
+
 	conn.Loop()
+	agent.Stop()
 }
 
 func RegisterCallbacks(conn *irc.Connection) {

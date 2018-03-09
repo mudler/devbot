@@ -4,6 +4,7 @@ import (
 	"log"
 	"regexp"
 
+	"github.com/mudler/anagent"
 	"github.com/mudler/devbot/bot"
 	"github.com/thoj/go-ircevent"
 )
@@ -14,7 +15,7 @@ func init() {
 	bot.RegisterPlugin(&Plugin{})
 }
 
-func (m *Plugin) Register() {
+func (m *Plugin) Register(a *anagent.Anagent) {
 	log.Println("[ProgressTracker] Started")
 }
 

@@ -5,6 +5,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/mudler/anagent"
 	"github.com/mudler/devbot/bot"
 	util "github.com/mudler/devbot/shared/utils"
 
@@ -22,7 +23,7 @@ func init() {
 	bot.RegisterPlugin(&Plugin{})
 }
 
-func (m *Plugin) Register() {
+func (m *Plugin) Register(a *anagent.Anagent) {
 	log.Println("[Team] Started")
 }
 

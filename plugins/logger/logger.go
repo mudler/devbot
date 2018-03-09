@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"github.com/mudler/anagent"
 	"github.com/mudler/devbot/bot"
 	"github.com/thoj/go-ircevent"
 
@@ -18,7 +19,7 @@ func init() {
 	bot.RegisterPlugin(&LoggerPlugin{})
 }
 
-func (m *LoggerPlugin) Register() {
+func (m *LoggerPlugin) Register(a *anagent.Anagent) {
 	log.Println("[LoggerPlugin] Started")
 }
 func (m *LoggerPlugin) OnQuit(event *irc.Event) {

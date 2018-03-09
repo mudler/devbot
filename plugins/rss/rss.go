@@ -2,8 +2,8 @@ package rss
 
 import (
 	"strings"
-	"time"
 
+	"github.com/mudler/anagent"
 	"github.com/mudler/devbot/bot"
 	util "github.com/mudler/devbot/shared/utils"
 
@@ -13,16 +13,16 @@ import (
 )
 
 type Plugin struct {
-	CheckFeedtimer chan bool
+	CheckFeedtimer anagent.TimerID
 }
 
 func init() {
 	bot.RegisterPlugin(&Plugin{})
 }
 
-func (m *Plugin) Register() {
+func (m *Plugin) Register(a *anagent.Anagent) {
 	log.Println("[RSSRead] Started")
-	m.CheckFeedtimer = util.RecurringTimer(CheckFeed, 10*time.Second)
+	m.CheckFeedtimer = a.AddRecurringTimerSeconds(10, CheckFeed)
 }
 
 func (m *Plugin) OnPrivmsg(event *irc.Event) {

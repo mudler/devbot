@@ -1,6 +1,7 @@
 package spamdetect
 
 import (
+	"github.com/mudler/anagent"
 	"github.com/mudler/devbot/bot"
 	"github.com/mudler/devbot/shared/utils"
 
@@ -15,7 +16,7 @@ func init() {
 	bot.RegisterPlugin(&SpamDetectPlugin{})
 }
 
-func (m *SpamDetectPlugin) Register() {
+func (m *SpamDetectPlugin) Register(a *anagent.Anagent) {
 	log.Println("[SpamDetectPlugin] Started")
 }
 

@@ -8,6 +8,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/mudler/anagent"
 	"github.com/mudler/devbot/bot"
 	"github.com/thoj/go-ircevent"
 )
@@ -18,7 +19,7 @@ func init() {
 	bot.RegisterPlugin(&UrlPreviewPlugin{})
 }
 
-func (m *UrlPreviewPlugin) Register() {
+func (m *UrlPreviewPlugin) Register(a *anagent.Anagent) {
 	log.Println("[UrlPreviewPlugin] Started")
 }
 

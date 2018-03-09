@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/darthlukan/goduckgo/goduckgo"
+	"github.com/mudler/anagent"
 	"github.com/mudler/devbot/bot"
 	"github.com/mudler/devbot/plugins/urlpreview"
 
@@ -19,7 +20,7 @@ func init() {
 	bot.RegisterPlugin(&DDGPlugin{})
 }
 
-func (m *DDGPlugin) Register() {
+func (m *DDGPlugin) Register(a *anagent.Anagent) {
 	log.Println("[DDGPlugin] Started")
 }
 

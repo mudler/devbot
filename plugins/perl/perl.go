@@ -6,8 +6,10 @@ import (
 	"os"
 	"os/exec"
 	"regexp"
-	"github.com/thoj/go-ircevent"
+
+	"github.com/mudler/anagent"
 	"github.com/mudler/devbot/bot"
+	"github.com/thoj/go-ircevent"
 )
 
 type Plugin struct{}
@@ -16,7 +18,7 @@ func init() {
 	bot.RegisterPlugin(&Plugin{})
 }
 
-func (m *Plugin) Register() {
+func (m *Plugin) Register(a *anagent.Anagent) {
 	log.Println("[Perl] Started")
 }
 

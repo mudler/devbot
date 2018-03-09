@@ -1,6 +1,7 @@
 package brain
 
 import (
+	"github.com/mudler/anagent"
 	"github.com/mudler/devbot/bot"
 	cobe "github.com/mudler/go.cobe"
 
@@ -19,7 +20,7 @@ func init() {
 	bot.RegisterPlugin(&BrainPlugin{})
 }
 
-func (m *BrainPlugin) Register() {
+func (m *BrainPlugin) Register(a *anagent.Anagent) {
 	log.Println("[BrainPlugin] Started")
 	b, err := cobe.OpenCobe2Brain(bot.Config.BrainFile)
 	m.Brain = b

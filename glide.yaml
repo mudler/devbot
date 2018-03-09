@@ -15,3 +15,4 @@ import:
 - package: golang.org/x/oauth2
 - package: github.com/boltdb/bolt
   version: v1.3.1
+- package: github.com/mudler/anagent

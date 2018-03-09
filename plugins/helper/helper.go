@@ -1,6 +1,7 @@
 package helper
 
 import (
+	"github.com/mudler/anagent"
 	"github.com/mudler/devbot/bot"
 	"github.com/thoj/go-ircevent"
 
@@ -14,7 +15,7 @@ func init() {
 	bot.RegisterPlugin(&HelperPlugin{})
 }
 
-func (m *HelperPlugin) Register() {
+func (m *HelperPlugin) Register(a *anagent.Anagent) {
 	log.Println("[HelperPlugin] Started")
 }
 
