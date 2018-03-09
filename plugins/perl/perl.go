@@ -6,9 +6,8 @@ import (
 	"os"
 	"os/exec"
 	"regexp"
-
-	"github.com/mudler/devbot/bot"
 	"github.com/thoj/go-ircevent"
+	"github.com/mudler/devbot/bot"
 )
 
 type Plugin struct{}
@@ -29,7 +28,7 @@ func (m *Plugin) OnPrivmsg(event *irc.Event) {
 		destination = event.Nick
 	}
 
-	regex, _ := regexp.Compile(`(?i)perl(?:|\s)[:]{1}(.*)`)
+	regex, _ := regexp.Compile(`(?i)` + bot.Config.CommandPrefix + `perl(?:|\s)[:]{1}(.*)`)
 
 	code := regex.FindStringSubmatch(event.Message())
 

@@ -31,7 +31,7 @@ func (m *Plugin) OnPrivmsg(event *irc.Event) {
 	}
 
 	if strings.Contains(msg, bot.Config.CommandPrefix+"team") {
-		args := util.StripPluginCommand(msg, bot.Config.CommandPrefix, "team")
+		args := strings.TrimSpace(util.StripPluginCommand(msg, bot.Config.CommandPrefix, "team"))
 		if atom, err := bot.DBListKeys("team" + args); err == nil {
 			conn.Privmsg(destination, args+": "+strings.Join(atom, " "))
 		}
