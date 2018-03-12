@@ -15,11 +15,16 @@ func SetupTimer(s string, a *anagent.Anagent) {
 	timer_name := split[0]
 	team := split[1]
 	channel := split[2]
-
+	now := time.Now()
 	when, err := time.Parse("3:04PM", split[3])
 	if err != nil {
 		fmt.Println("Error setting up the timer ", s)
 		return
+	}
+
+	when = time.Date(now.Year(), now.Month(), now.Day(), when.Hour(), when.Minute(), 0, 0, time.UTC)
+	if when.Before(now) {
+		when = when.AddDate(0, 0, 1)
 	}
 
 	fmt.Println("Timer: " + timer_name)
