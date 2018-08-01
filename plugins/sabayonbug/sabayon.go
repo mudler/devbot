@@ -29,7 +29,7 @@ func (m *SabayonBugzillaPlugin) OnPrivmsg(event *irc.Event) {
 	}
 
 	// Detect if in chats are written bugs id like #12345
-	regex, _ := regexp.Compile(`(?:^|\s)[＃#]{1}(\w+)`)
+	regex, _ := regexp.Compile(`(?i)bug(?:^|\s)[＃#]{1}(\w+)`)
 	bug := regex.FindStringSubmatch(event.Message())
 
 	if len(bug) > 1 {
