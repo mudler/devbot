@@ -38,6 +38,7 @@ type Configuration struct {
 	UnsecureTLS         bool
 	Administrators      map[string]bool
 	Plugins             map[string]bool
+	AutoVoicePrefix     string
 }
 
 func (c *Configuration) IsAdmin(user string) bool {
