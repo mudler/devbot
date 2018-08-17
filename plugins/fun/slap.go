@@ -1,4 +1,4 @@
-package seen
+package fun
 
 import (
 	"strings"
