@@ -2,7 +2,7 @@ package admin
 
 import (
 	"log"
-	"strings"
+	"regexp"
 
 	"github.com/mudler/anagent"
 	irc "github.com/thoj/go-ircevent"
@@ -24,10 +24,15 @@ func (m *AutoVoice) OnJoin(event *irc.Event) {
 	conn := bot.Conn
 	config := bot.Config
 
+	match, err := regexp.MatchString(config.AutoVoicePrefix, event.Nick)
+	if err != nil {
+		return
+	}
+
 	//message := event.Message()
 	channel := event.Arguments[0]
 
-	if strings.HasPrefix(event.Nick, config.AutoVoicePrefix) {
+	if match {
 		conn.SendRaw("MODE " + channel + " +v " + event.Nick)
 	}
 
