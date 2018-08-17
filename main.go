@@ -11,6 +11,7 @@ import (
 	_ "github.com/mudler/devbot/plugins/admin"
 	_ "github.com/mudler/devbot/plugins/brain"
 	_ "github.com/mudler/devbot/plugins/ddg"
+	_ "github.com/mudler/devbot/plugins/fun"
 	_ "github.com/mudler/devbot/plugins/helper"
 
 	_ "github.com/mudler/devbot/plugins/gentoobug"
