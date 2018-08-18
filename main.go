@@ -58,7 +58,7 @@ func main() {
 		//Set logging to file
 		f, err := os.OpenFile(logFile, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 		if err != nil {
-			log.Fatal("error opening file: %v", err)
+			log.Fatal("error opening file: ", err)
 		}
 		defer f.Close()
 		fmt.Println("Log file: " + logFile)
